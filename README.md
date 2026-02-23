@@ -15,26 +15,44 @@ A voice-based AI assistant for planning home renovations, featuring two distinct
 ### Prerequisites
 
 - Node.js 18+
-- An OpenAI API key with access to `gpt-4o-mini`, `whisper-1`, and `tts-1`
+- API key(s) for the services you use for STT, LLM, and TTS. This implementation uses **OpenAI** for all three (`gpt-4o-mini`, `whisper-1`, `tts-1`); the spec allows any third-party APIs.
 
 ### Install
 
 ```bash
-npm install
+pnpm install
 ```
 
-### Environment Variables
+### Env vars (API keys)
 
-Create a `.env.local` file in the project root:
+The exercise allows any third-party APIs for STT/TTS/LLM. **This implementation** uses OpenAI for all three, so you need one key to run it.
 
-```env
-OPENAI_API_KEY=sk-...your-key-here...
-```
+**Where to put it:** in a file named `.env.local` in the **project root** (same folder as `package.json`). That file is gitignored and never committed.
+
+**How to add it:**
+
+1. **Option A — from the example file**
+   - Copy the example: `cp .env.example .env.local` (or on Windows: `copy .env.example .env.local`).
+   - Open `.env.local` and set your key:
+     ```env
+     OPENAI_API_KEY=sk-your-actual-key-here
+     ```
+
+2. **Option B — create the file manually**
+   - In the project root, create a new file named `.env.local`.
+   - Add this line (replace with your key):
+     ```env
+     OPENAI_API_KEY=sk-your-actual-key-here
+     ```
+
+**Getting an OpenAI key:** [OpenAI API keys](https://platform.openai.com/api-keys). This build uses `gpt-4o-mini`, `whisper-1`, and `tts-1`.
+
+**Note:** Tests use mocks and do not need any API key. Only `pnpm dev` / running the app locally requires it.
 
 ### Run (Development)
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
@@ -42,8 +60,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### Run (Production)
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
 ```
 
 ## How to Use
@@ -77,9 +95,29 @@ Bob resumes with context and produces a homeowner-friendly next-steps list.
 - "Switch me to Bob"
 - "Speak with Bob please"
 
+## Testing
+
+Install Playwright browsers once (required for e2e tests):
+
+```bash
+pnpm exec playwright install
+```
+
+Run all tests:
+
+```bash
+pnpm test
+```
+
+Tests include unit tests for agent transfer detection (`lib/agents`) and e2e tests for the voice assistant flows (initial load, send message to Bob, transfer to Alice, transfer back to Bob). E2e tests mock the chat and TTS APIs and use a test-only text input (visible when you open `/?e2e=1`) so they run without an OpenAI key or real mic.
+
+## Contributors
+
+- [@yashcoded](https://github.com/yashcoded)
+
 ## Architecture
 
-See [DESIGN.md](./DESIGN.md) for the full design note, architecture diagram, and tradeoffs.
+See [DESIGN.md](./DESIGN.md) for the full design note, including the required **Reflection** (challenges and improvements with tradeoffs), architecture diagram, detailed tradeoffs, and **Future scope** (enhancements beyond the stated requirements).
 
 ---
 
